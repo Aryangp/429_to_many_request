@@ -7,4 +7,4 @@ app.config.from_object('config.Config')
 
 db = SQLAlchemy(app)
 
-from app import controllers, models, services, utils
+from app import routes, models, services, utils
