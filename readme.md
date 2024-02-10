@@ -141,22 +141,30 @@ Re-ranking, Image searching and AI filtering  functionalites is currently under 
 
 ## Installation
 
-Install my-project with npm
+Clone the repository 
+### Frontend Installation
+Install Frontend with npm
 
 ```bash
-  npm install my-project
-  cd my-project
+  cd frontend
+  npm install 
+  npm run dev
 ```
+The frontend will be runing on http://localhost:3000 
+
+### Backend Installation
+Install Backend with Python
+
+```bash
+  cd backend2
+  pip install virtualenv
+  virtualenv venv
+  venv\Scripts\activate
+  pip install --no-cache-dir --requirement /app/requirements.txt 
+  python main.py
+```
+The Server is running on http://localhost:5000
     
-## Running Tests
-
-To run tests, run the following command
-
-```bash
-  npm run test
-```
-
-
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
