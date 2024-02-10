@@ -160,7 +160,7 @@ Install Backend with Python
   pip install virtualenv
   virtualenv venv
   venv\Scripts\activate
-  pip install --no-cache-dir --requirement /app/requirements.txt 
+  pip install --no-cache-dir --requirement ./requirements.txt 
   python main.py
 ```
 The Server is running on http://localhost:5000
