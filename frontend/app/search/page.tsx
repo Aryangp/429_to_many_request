@@ -1,19 +1,58 @@
-"use client";
+"use client"
 import React, { useState, useEffect } from "react";
 import SearchBar from "../components/SearchBar";
-import Card from "../components/Card";
 import Filter from "../components/Filter";
+import Card from "../components/Card";
 import { useDebounce } from "../components/hooks/useDebounce";
+import axios from "../utils/axios";
+
+type AdditionaData={
+  distance:number
+}
+
+type SearchResult= {
+  additional: AdditionaData,
+  brand: string,
+  category: string,
+  market_price: number,
+  product_desc: string,
+  product_name: string,
+  rating: number,
+  sale_price: number,
+  sub_category: string,
+  unique_id: string
+}
+
 
 const Search = () => {
   const [inputValue, setInputValue] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const searchQuery = useDebounce(inputValue, 1000);
-  const [searchResults, setSearchResults] = useState<string[]>([]);
 
   useEffect(() => {
-    // fetch data from the API
-    // set the data to searchResults
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.post("/search", {
+          query: searchQuery,
+          className: "CatalogSearchWithDescription"
+        });
+        const parsedData = JSON.parse(data);
+        setSearchResults(parsedData);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        // Handle error gracefully (e.g., show an error message)
+      }
+    };
+
+    if (searchQuery) {
+      fetchData();
+    } else {
+      // Clear search results if search query is empty
+      setSearchResults([]);
+    }
   }, [searchQuery]);
+
+  console.log("data in the searchResult", searchResults);
 
   return (
     <>
@@ -25,23 +64,17 @@ const Search = () => {
           <Filter />
         </div>
       </div>
-      <div className=" text-green-300 font-bold text-xl m-5">{searchQuery}</div>
+      
       <div className="flex flex-row flex-wrap gap-4 gap-x-6 m-4 justify-center">
-        <div className="basis-1/4">
-          <Card />
-        </div>
-        <div className="basis-1/4">
-          <Card />
-        </div>
-        <div className="basis-1/4">
-          <Card />
-        </div>
-        <div className="basis-1/4">
-          <Card />
-        </div>
-        <div className="basis-1/4">
-          <Card />
-        </div>
+        {searchResults.length === 0 ? (
+          <p>No results found</p>
+        ) : (
+          searchResults.map((result) => (
+            <div key={result.unique_id}>
+              <Card cardDetails={result} />
+            </div>
+          ))
+        )}
       </div>
     </>
   );
