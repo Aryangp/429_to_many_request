@@ -39,7 +39,7 @@ Our project harnesses the capabilities of multiple AI models to elevate search i
 This AI-powered approach ensures that your searches deliver the results you crave.
 
 ## Usage
-![App Screenshot](url)
+![catalog_test](https://github.com/Aryangp/429_to_many_request/assets/91003905/8ff560c2-05fb-47e1-88ad-dd1eeaf04a8c)
 
 #### I. Querying:
 
@@ -51,6 +51,7 @@ This AI-powered approach ensures that your searches deliver the results you crav
 - **Understanding Results:**
   Results are ranked by relevance and presented in paginated form for user convenience.
 - Re-ranking functionality (under development) aims to further enhance result accuracy.
+
 
 #### II. Image Searching (Production Feature):
 
@@ -64,30 +65,79 @@ Re-ranking, Image searching and AI filtering  functionalites is currently under 
 
 ## API Reference
 
-#### Get all items
+#### Get Search Result
 
 ```http
-  GET /api/items
+  POST /search
 ```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
+| `query` | `string` | **Required**. Your Query|
+| `className` | `string` | **Required**. Your class name of weaviate schema |
 
-#### Get item
+#### Create Weaviate Schema
 
 ```http
-  GET /api/items/${id}
+  POST /weaviate/schema
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
+| `className`      | `string` | **Required**. class Name of the weaviate schema |
+| `properties`      | `mentioned below` | **Required**. Id of item to fetch |
 
-#### add(num1, num2)
+```
+   "properties": [
+           {
+             "name": "unique_id",
+             "dataType": ["int"],
+             "description": "user id",
+             "moduleConfig": {
+                 "text2vec-huggingface": {
+                 "skip": True,
+                 "vectorizePropertyName": True
+                 }
+             }
+             },
+             {
+             "name": "product_name",
+             "dataType": ["text"],
+             "description": "product_name",
+             "moduleConfig": {
+                 "text2vec-huggingface": {
+                 "skip": True,
+                 "vectorizePropertyName": True
+                 }
+             }
+           }
+        ]
 
-Takes two numbers and returns the sum.
+```
+#### Add Data
 
+```http
+  POST /add/data
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `datafile`      | `csv` | **Required**. Data file for adding data |
+
+#### format of the file
+
+```
+# This should be the title of each column and type of data
+  brand: string,
+  category: string,
+  market_price: number,
+  product_desc: string,
+  product_name: string,
+  rating: number,
+  sale_price: number,
+  sub_category: string,
+  unique_id: string
+```
 
 ## Installation
 
