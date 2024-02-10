@@ -4,9 +4,9 @@
 We present a robust catalog searching engine tailored for the dynamic landscape of e-commerce, with the flexibility to extend its architecture for diverse applications. The project revolves around efficiently processing and retrieving information from client-provided CSV files containing detailed product or item information.
 
 ## Architecture Overview
+https://github.com/Aryangp/429_to_many_request/assets/95998892/687796c0-cba1-4cff-83d0-f8bbda736208
 
-
-![App Screenshot](https://github.com/code-inhub/NewsApp3.0/assets/95998892/36177606-700e-41cb-aa8d-6a3fe8d53367)
+![App Screenshot](https://github.com/Aryangp/429_to_many_request/assets/95998892/687796c0-cba1-4cff-83d0-f8bbda736208)
 
 - **CSV Data Ingestion & Embedding:**
   Stores item data in the Weavite Vector Database for efficient and fast retrieval.
