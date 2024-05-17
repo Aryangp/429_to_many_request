@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import json
 import pandas as pd
 from flask import jsonify
+import base64, requests
+
 load_dotenv()
 
 def weaviate_init():
@@ -35,6 +37,92 @@ def weaviate_middleware_search(request):
     )
     return json.dumps(response["data"]["Get"]["CatalogSearchWithDescription"],indent=2)
 
+def weaviate_middleware_filter_search(request):
+    query = request.get_json().get('query')
+    className = request.get_json().get('className')
+
+    ######### expecting price, brand, category, sub_category, rating as filters #########
+
+    upper_price_limit = request.get_json().get('upper_price_limit')
+    lower_price_limit = request.get_json().get('lower_price_limit')
+    brand = request.get_json().get('brand')
+    category = request.get_json().get('category')
+    sub_category = request.get_json().get('sub_category')
+    min_rating = request.get_json().get('min_rating')
+
+    client = weaviate_init()
+    response = (
+        client.query
+        .get(className, ["unique_id", "product_name","category","sub_category","brand","sale_price","market_price","product_type","rating","product_desc"])
+        .with_hybrid(
+            query=query,
+        )
+        .with_where({
+            # check whether the filter to be applied on sale price or market price
+            "operator": "And",
+            "operands": [
+                {
+                    "path": ["sale_price"],
+                    "operator": "GreaterThan",
+                    "valueInt": lower_price_limit
+                },
+                {
+                    "path": ["sale_price"],
+                    "operator": "LessThan",
+                    "valueInt": upper_price_limit
+                },
+                {
+                    "path": ["brand"],
+                    "operator": "Equal",
+                    "valueString": brand
+                },
+                {
+                    "path": ["category"],
+                    "operator": "Equal",
+                    "valueString": category
+                },
+                {
+                    "path": ["sub_category"],
+                    "operator": "Equal",
+                    "valueString": sub_category
+                },
+                {
+                    "path": ["rating"],
+                    "operator": "GreaterThan",
+                    "valueInt": min_rating
+                }
+            ]
+        })
+        .with_limit(30)
+        .with_additional(["distance"])
+        .do()
+    )
+    return json.dumps(response["data"]["Get"]["CatalogSearchWithDescription"],indent=2)
+
+
+##### For Image Search  changes in schema to be done are : ##### 
+    #  {
+    #       "dataType": [
+    #         "blob"
+    #       ],
+    #       "description": "product image",
+    #       "name": "image"
+    #     },
+
+##### Fot image search implementation we need to create a new weavaite container and enable img2vec-neural module using weavaite docker compose refer here :  
+# https://weaviate.io/developers/weaviate/modules/retriever-vectorizer-modules/img2vec-neural#nearimage 
+
+def weaviate_image_search(request):
+    client=weaviate_init()
+    image=request.get_json().get('image')
+    class_name = request.get_json().get('className')
+    response = (
+    client.query
+    .get(class_name, ["unique_id", "product_name","category","sub_category","brand","sale_price","market_price","product_type","rating","product_desc","image"])
+    .with_near_image({"image": image})  # default `encode=True` reads & encodes the file
+    .with_limit(10)
+    .do()
+)
 
 def weaviate_create_schema(className,properties):
     client=weaviate_init()
