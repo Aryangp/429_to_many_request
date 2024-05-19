@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from middleware.pasql_mid import SessionLocal, User, engine, Base
+from middleware.pasql_mid import SessionLocal, engine, Base
+from models.user import User
 
 # Configure the JWT settings
 SECRET_KEY = "win_the_hackathon"
