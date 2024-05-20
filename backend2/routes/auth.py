@@ -4,9 +4,10 @@ from middleware.jwt_auth import authenticate_user, create_access_token, get_pass
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from models.auth_model import Token, UserBase,UserCreate
-from middleware.pasql_mid import SessionLocal, User, engine, Base
+from middleware.pasql_mid import SessionLocal, engine, Base
+from models.user import User
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Annotated, Optional
 from jose import JWTError,jwt
 from passlib.context import CryptContext
 
@@ -18,6 +19,7 @@ router = APIRouter(
 )
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -25,7 +27,11 @@ def get_db():
     finally:
         db.close()
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+
+db_dependency = Annotated[Session, Depends(get_db)]
+
+
+async def get_current_user(db: db_dependency,token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -45,7 +51,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 
 @router.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_for_access_token(db: db_dependency,form_data: OAuth2PasswordRequestForm = Depends()):
     print(form_data.username, form_data.password)
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -61,7 +67,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/users/create", response_model=UserBase)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_user(db: db_dependency,user: UserCreate):
     hashed_password = get_password_hash(user.password)
     db_user = User(username=user.username, password=hashed_password)
     db.add(db_user)

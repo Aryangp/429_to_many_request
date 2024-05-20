@@ -1,12 +1,12 @@
 from middleware.weaviate import weaviate_middleware_search
 from fastapi import Depends, APIRouter, Request, Form
 from routes.auth import get_current_user
-from middleware.pasql_mid import User
+from models.user import User
 from fastapi import HTTPException
 
 router = APIRouter(
     prefix="/search",
-    tags=["searchs"],
+    tags=["searches"],
     responses={404: {"description": "Not found"}}
 )
 
