@@ -6,12 +6,13 @@
 # from flask_cors 
 
 
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import Depends, FastAPI
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from middleware.pasql_mid import SessionLocal, engine, Base
 from routes.search import router as search_router
 from routes.auth import router as auth_router
+from routes.weaviateSetUp import router as weaviate_router
 
 app = FastAPI()
 
@@ -21,6 +22,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app.include_router(search_router)
 app.include_router(auth_router)
+app.include_router(weaviate_router)
 
 
 

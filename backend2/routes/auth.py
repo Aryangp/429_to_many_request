@@ -5,11 +5,13 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from models.auth_model import Token, UserBase,UserCreate
 from middleware.pasql_mid import SessionLocal, engine, Base
-from models.user import User
+from models.user import User, WeaviateData
 from sqlalchemy.orm import Session
 from typing import Annotated, Optional
 from jose import JWTError,jwt
 from passlib.context import CryptContext
+import random
+import string
 
 
 router = APIRouter(
@@ -27,6 +29,9 @@ def get_db():
     finally:
         db.close()
 
+def generate_random_string(length: int) -> str:
+    random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+    return random_string
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
@@ -60,9 +65,20 @@ async def login_for_access_token(db: db_dependency,form_data: OAuth2PasswordRequ
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    try:
+        db_weaviate = db.query(WeaviateData).filter(WeaviateData.user_id == user.id).first()
+        if not db_weaviate:
+            random_string = generate_random_string(10)
+            db_weaviate = WeaviateData(className=random_string,user_id=user.id)
+            db.add(db_weaviate)
+            db.commit()
+            db.refresh(db_weaviate)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    className= random_string if not db_weaviate else db_weaviate.className
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username,"className":className}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -76,6 +92,6 @@ def create_user(db: db_dependency,user: UserCreate):
     return db_user
 
 @router.get("/users/me")
-async def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
+async def read_users_me(current_data: tuple[User , WeaviateData]= Depends(get_current_user)):
+    return current_data[0]
 
