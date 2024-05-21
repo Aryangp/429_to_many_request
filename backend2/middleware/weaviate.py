@@ -3,25 +3,27 @@ import os
 from dotenv import load_dotenv
 import json
 import pandas as pd
-from flask import jsonify
+from fastapi import HTTPException, Request
+import io 
 load_dotenv()
 
 def weaviate_init():
-    # client = weaviate.Client(
-    #     url = "https://new-cluster-testing-ygkcz16f.weaviate.network",  # Replace with your endpoint
-    #     auth_client_secret=weaviate.AuthApiKey(api_key=os.getenv("WEAVIATE_API_KEY")),  # Replace w/ your Weaviate instance API key
-    #     additional_headers = {
-    #         "X-HuggingFace-Api-Key": os.getenv("HUGGINGFACE_API_KEY")  # Replace with your Hugging Face API key
-    #     }
-    # )
     client = weaviate.Client(
-        url = "http://34.125.130.73:8080",  # Replace with your endpoint
+        url = "https://weaviatetest-8o6sm485.weaviate.network",  # Replace with your endpoint
+        auth_client_secret=weaviate.AuthApiKey(api_key=os.getenv("WEAVIATE_API_KEY")),  # Replace w/ your Weaviate instance API key
+        additional_headers = {
+            "X-HuggingFace-Api-Key": os.getenv("HUGGINGFACE_API_KEY")  # Replace with your Hugging Face API key
+        }
     )
+    # client = weaviate.Client(
+    #     #http://35.230.98.126:8080
+    #     url = "http://35.230.98.126:8080",  # Replace with your endpoint
+    # )
     return client
 
-def weaviate_middleware_search(request):
-    query = request.get_json().get('query')
-    className = request.get_json().get('className')
+def weaviate_middleware_search(request:Request):
+    query = request.query_params.get('query')
+    className = request.query_params.get('className')
     client = weaviate_init()
     response = (
         client.query
@@ -38,7 +40,7 @@ def weaviate_middleware_search(request):
 
 def weaviate_create_schema(className,properties):
     client=weaviate_init()
-    client.schema.delete_class("CatalogSearchWithDescription")
+    client.schema.delete_class(className)
     class_search_schema={
         "class": className,
         "description": f"A class called {className} and used for doing vector search on {className} data.",
@@ -67,6 +69,7 @@ def weaviate_create_schema(className,properties):
         "properties": properties
         }
     client.schema.create_class(class_search_schema)
+    return json.dumps({"message":"Schema created successfully"},indent=2)
 
 #dummy data of the properties
     
@@ -212,24 +215,22 @@ def convert_data(df_new):
 
 
 # Main function to add the data to weaviate
-def weaviate_middleware_add_data(request):
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part in the request'}), 400
-    file = request.files['file']
+def weaviate_middleware_add_data(request,current_user,db,files):
+    file=files[0]
 
     if file.filename == '':
-        return jsonify({'error': 'No file selected for uploading'}), 400
+        raise HTTPException(status_code=400, detail="No file selected for uploading")
     
     allowed_extensions = {'csv'}
-    if '.' not in file.filename or file.filename.split('.')[-1].lower() not in allowed_extensions:
-        return jsonify({'error': 'Invalid file type. Only CSV files are allowed.'}), 400
+    if '.' not in file.filename or file.content_type != 'text/csv':
+        raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV file")
 
     if file:
         try:
-            file.save(file.filename)
-            df = pd.read_csv(file.filename)
+            contents = file.read()
+            df = pd.read_csv(io.BytesIO(contents))
         except Exception as e:
-            return jsonify({'error': f'Failed to read the file: {str(e)}'}), 400
+            raise HTTPException(status_code=400, detail=str(e))
         percentage = 10
         # Calculate the number of rows to sample based on the percentage
         sample_size = int(len(df) * percentage / 100)
@@ -241,8 +242,8 @@ def weaviate_middleware_add_data(request):
         try:
             for data in dict_df:
                 uuid=add_data(data)
-            return jsonify({'message': 'Data added successfully'}), 201
+            return json.dumps({"message":"Data added successfully","uuid":uuid},indent=2)
         except Exception as e:
-            return jsonify({'error': str(e)}), 400
+            raise HTTPException(status_code=400, detail=str(e))
         
 

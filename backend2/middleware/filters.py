@@ -2,7 +2,7 @@ import weaviate
 import os 
 from dotenv import load_dotenv
 import json
-import base64, requests
+
 
 load_dotenv()
 
@@ -67,6 +67,7 @@ def weaviate_filter_price(request):
         .with_additional(["distance"])
         .do()
     )
+
     return json.dumps(response["data"]["Get"][className],indent=2)
 
 
