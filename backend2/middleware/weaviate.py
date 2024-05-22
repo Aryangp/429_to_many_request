@@ -21,9 +21,8 @@ def weaviate_init():
     # )
     return client
 
-def weaviate_middleware_search(request:Request):
-    query = request.query_params.get('query')
-    className = request.query_params.get('className')
+def weaviate_middleware_search(request,db,current_data,query):
+    className = current_data[1].className
     client = weaviate_init()
     response = (
         client.query
@@ -35,8 +34,44 @@ def weaviate_middleware_search(request:Request):
         .with_additional(["distance"])
         .do()
     )
-    return json.dumps(response["data"]["Get"]["CatalogSearchWithDescription"],indent=2)
+    print(response)
+    return json.dumps(response["data"]["Get"][className],indent=2)
 
+
+
+def weaviate_filter_price(data,className,query):
+    client=weaviate_init()
+    upper_price_limit = data['price']['upper_price_limit']
+    lower_price_limit =data['price']['lower_price_limit']
+    print(upper_price_limit)
+    print(lower_price_limit)
+    response = (
+        client.query
+        .get(className, ["unique_id", "product_name","category","sub_category","brand","sale_price","market_price","product_type","rating","product_desc"])
+        .with_near_text({
+            "concepts": [query],
+        })
+        .with_where({
+            "operator": "And",
+            "operands": [
+                {
+                    "path": ["sale_price"],
+                    "operator": "GreaterThan",
+                    "valueInt": lower_price_limit
+                },
+                {
+                    "path": ["sale_price"],
+                    "operator": "LessThan",
+                    "valueInt": upper_price_limit
+                }
+            ]
+        })
+        .with_limit(10)
+        .with_additional(["distance"])
+        .do()
+    )
+
+    return json.dumps(response["data"]["Get"][className],indent=2)
 
 def weaviate_create_schema(className,properties):
     client=weaviate_init()
@@ -215,23 +250,30 @@ def convert_data(df_new):
 
 
 # Main function to add the data to weaviate
-def weaviate_middleware_add_data(request,current_user,db,files):
-    file=files[0]
-
-    if file.filename == '':
+def weaviate_middleware_add_data(request,current_user,db,fileObject):
+    if fileObject.filename == '':
         raise HTTPException(status_code=400, detail="No file selected for uploading")
     
     allowed_extensions = {'csv'}
-    if '.' not in file.filename or file.content_type != 'text/csv':
+    if '.' not in fileObject.filename or fileObject.content_type != 'text/csv':
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV file")
 
-    if file:
+    if fileObject:
         try:
-            contents = file.read()
+            contents = fileObject.file.read()
             df = pd.read_csv(io.BytesIO(contents))
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
+        print("no error till now")
         percentage = 10
+            # Check if there are any null values in the DataFrame
+        if df.isnull().values.any():
+            # Iterate over each column
+            for column in df.columns:
+                # Check if the column has null values
+                if df[column].isnull().any():
+                    # Fill the null values with a default value (e.g. 0)
+                    df[column].fillna(0, inplace=True)
         # Calculate the number of rows to sample based on the percentage
         sample_size = int(len(df) * percentage / 100)
         # Use the sample method to randomly select the specified percentage of data

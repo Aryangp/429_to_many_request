@@ -36,9 +36,9 @@ async def weaviate_set_up_schema(request:Request,db: db_dependency,current_data:
 
 
 @router.post("/add_data", response_model=str)
-def weaviate_add_data(request:Request,db: db_dependency,current_user: User = Depends(get_current_user),files:List[UploadFile] = File(...)):
+def weaviate_add_data(request:Request,db: db_dependency,current_user: User = Depends(get_current_user),file:UploadFile = File(...)):
     try:
-        add_result = weaviate_middleware_add_data(request, current_user,db,files)
+        add_result = weaviate_middleware_add_data(request, current_user,db,file)
         return add_result
     except Exception as e:
         raise Exception(e)
