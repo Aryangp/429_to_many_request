@@ -16,7 +16,7 @@ def weaviate_init():
         }
     )
     # client = weaviate.Client(
-    #     #http://35.230.98.126:8080
+    #     #http://34.168.110.14:8080
     #     url = "http://35.230.98.126:8080",  # Replace with your endpoint
     # )
     return client
