@@ -9,10 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.0.2",
+    "@tabler/icons-react": "^3.5.0",
     "axios": "^1.6.7",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.2.6",
+    "mini-svg-data-uri": "^1.4.4",
     "next": "13.5.6",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -21,7 +21,7 @@ const Filter = () => {
     <div className="relative">
       {/* Filter button */}
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded focus:outline-none"
+        className="bg-custom1 text-custom4 px-4 py-2 focus:outline-none rounded-md h-11 font-medium border-2 border-custom5 hover:border-custom4 transition-all ease-linear duration-200"
         onClick={toggleFilter}
       >
         Filter
@@ -37,16 +37,18 @@ const Filter = () => {
 
       {/* Filter options */}
       {isFilterOpen && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded">
-          <h2 className="text-lg font-bold mb-4 text-black">Filter Options</h2>
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-custom2 p-6 rounded-lg flex flex-col items-center justify-center">
+          <h2 className="text-xl text-center mb-4 text-custom4">
+            Filter Options
+          </h2>
 
           {/* Price Range */}
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2 text-black">
+            <label className="block text-lg font mb-2 text-custom4">
               Price Range
             </label>
-            <div className="flex items-center space-x-2 text-black">
-              <span>$</span>
+            <div className="flex items-center space-x-2 text-custom4">
+              <span>₹</span>
               <input
                 type="range"
                 min="0"
@@ -57,7 +59,7 @@ const Filter = () => {
                 }
                 className="w-full"
               />
-              <span>$</span>
+              <span>₹</span>
               <input
                 type="range"
                 min="0"
@@ -69,14 +71,14 @@ const Filter = () => {
                 className="w-full"
               />
             </div>
-            <div className="block text-black">
+            <div className="block text-custom4">
               Price Range: {priceRange[0]} - {priceRange[1]}
             </div>
           </div>
 
           {/* Minimum Rating */}
-          <div className="mb-4 text-black">
-            <label className="block text-sm font-semibold mb-2 text-black">
+          <div className="mb-4 text-custom4">
+            <label className="block text-lg mb-2 text-custom4 ">
               Minimum Rating
             </label>
             <input
@@ -93,7 +95,7 @@ const Filter = () => {
 
           {/* Apply Filters button */}
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded focus:outline-none"
+            className="bg-custom2 border-2 border-custom5 text-custom4 px-4 py-2 rounded focus:outline-none hover:border-custom4 transition-all ease-linear duration-200"
             onClick={applyFilters}
           >
             Apply Filters
@@ -101,7 +103,7 @@ const Filter = () => {
         </div>
       )}
     </div>
-  );
+  )
 };
 
 export default Filter;
