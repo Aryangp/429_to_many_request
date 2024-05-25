@@ -10,24 +10,12 @@ function NavBarMenu() {
       icon: <IconHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
     },
     {
-      name: "About",
-      link: "/about",
-      icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
-    },
-    {
       name: "Search",
       link: "/search",
       icon: (
         <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />
       ),
-    },
-    {
-      name: "Team",
-      link: "/team",
-      icon: (
-        <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />
-      ),
-    },
+    },  
   ]
   return (
     <div className="relative w-full">
