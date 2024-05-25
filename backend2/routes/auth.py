@@ -31,6 +31,7 @@ def get_db():
 
 def generate_random_string(length: int) -> str:
     random_string = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+    random_string="Class_"+random_string
     return random_string
 
 db_dependency = Annotated[Session, Depends(get_db)]
