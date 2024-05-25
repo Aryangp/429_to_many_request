@@ -54,7 +54,7 @@ const Search = () => {
   console.log("data in the searchResult", searchResults)
 
   return (
-    <>
+    <div className="bg-custom1 h-[100vh] pt-10">
       <div className="ml-3 flex justify-center flex-row gap-2">
         <div>
           <SearchBar
@@ -67,7 +67,7 @@ const Search = () => {
         </div>
       </div>
 
-      <div className="flex flex-row flex-wrap gap-4 gap-x-6 m-4 justify-center">
+      <div className="flex flex-row flex-wrap gap-4 gap-x-6 m-4 justify-center text-white">
         {searchResults.length === 0 ? (
           <p>No results found</p>
         ) : (
@@ -78,7 +78,7 @@ const Search = () => {
           ))
         )}
       </div>
-    </>
+    </div>
   )
 }
 
