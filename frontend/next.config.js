@@ -4,6 +4,7 @@ const nextConfig = {
     domains: [
       "cdn-icons-png.flaticon.com",
       "flowbite.com",
+      'images.unsplash.com',
       "www.google.com",
       "media.istockphoto.com",
     ],
