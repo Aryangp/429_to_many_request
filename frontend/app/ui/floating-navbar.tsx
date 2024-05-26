@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   motion,
   AnimatePresence,
@@ -9,6 +9,7 @@ import {
 import { HoverBorderGradient } from "./hover-border-gradient"
 import { cn } from "@/utils/cn"
 import Link from "next/link"
+import { signIn } from "next-auth/react"
 
 export const FloatingNav = ({
   navItems,
@@ -23,6 +24,11 @@ export const FloatingNav = ({
 }) => {
   const { scrollYProgress } = useScroll()
   const [visible, setVisible] = useState(true)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useMotionValueEvent(scrollYProgress, "change", (current) => {
     // Check if current is not undefined and is a number
@@ -40,6 +46,10 @@ export const FloatingNav = ({
       }
     }
   })
+
+  if (!isClient) {
+    return null
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -77,7 +87,7 @@ export const FloatingNav = ({
           className="dark:bg-custom2 bg-custom2 text-white dark:text-white"
           as="button"
         >
-          <a href="/login">Login</a>
+          <button onClick={() => signIn()}>Login</button>
         </HoverBorderGradient>
       </motion.div>
     </AnimatePresence>

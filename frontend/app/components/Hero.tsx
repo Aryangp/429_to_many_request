@@ -5,25 +5,25 @@ const people = [
     id: 1,
     name: "Rhythm Arora",
     image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      "https://github-production-user-asset-6210df.s3.amazonaws.com/65298117/333845627-eaa47532-90eb-498b-bd00-bf80a0dd70ab.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240526%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240526T032605Z&X-Amz-Expires=300&X-Amz-Signature=5f2e7130872704cba73026265b8446be5f06f7213449f4414c0db9dcd55f0f49&X-Amz-SignedHeaders=host&actor_id=65298117&key_id=0&repo_id=799354253",
   },
   {
     id: 2,
     name: "Aryan Gupta",
     image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      "https://github-production-user-asset-6210df.s3.amazonaws.com/65298117/333845762-20e95bbc-1c52-4023-a7e0-ff1a3f81e12d.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240526%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240526T033141Z&X-Amz-Expires=300&X-Amz-Signature=ea3a37913f98c36c5891ec8aeb35e309e27b0c10db13536f8272f40234ee7537&X-Amz-SignedHeaders=host&actor_id=65298117&key_id=0&repo_id=799354253",
   },
   {
     id: 3,
     name: "Anshul Rana",
     image:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      "https://github-production-user-asset-6210df.s3.amazonaws.com/65298117/333845758-7ada4eb4-e2f9-4c40-aab8-cd0c82d34777.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240526%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240526T033341Z&X-Amz-Expires=300&X-Amz-Signature=f7c0b2cb76099e636c136de9c4612f30cf1d8180df494c92f9e92a59c048c6ed&X-Amz-SignedHeaders=host&actor_id=65298117&key_id=0&repo_id=799354253",
   },
   {
     id: 4,
     name: "Ayush Saini",
     image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      "https://github-production-user-asset-6210df.s3.amazonaws.com/65298117/333845771-a6fafccb-7a86-4123-a9a7-cbae859886a9.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240526%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240526T033210Z&X-Amz-Expires=300&X-Amz-Signature=406f9361de352d47cb2a12e31b9574af295c4e89057d59d1e9f423e2d92093f5&X-Amz-SignedHeaders=host&actor_id=65298117&key_id=0&repo_id=799354253",
   },
 ]
 const Hero = () => {
