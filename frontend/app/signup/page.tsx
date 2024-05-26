@@ -81,7 +81,7 @@ export default function SignupFormDemo() {
               </Label>
               <Input
                 id="username"
-                placeholder="letswinthis"
+                placeholder="Enter a username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}

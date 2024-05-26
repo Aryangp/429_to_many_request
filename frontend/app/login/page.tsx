@@ -32,7 +32,7 @@ export default function LogIn() {
   return (
     <section className="pt-10 bg-custom1 min-h-screen">
       <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-custom2 dark:bg-black mt-10">
-        <h2 className="font-bold text-2xl text-white dark:text-neutral-200 text-center mb-10">
+        <h2 className="font-bold text-2xl text-white dark:text-neutral-200 text-center mb-9 mt-3">
           Welcome Back!
         </h2>
         <form
@@ -42,13 +42,13 @@ export default function LogIn() {
           <LabelInputContainer className="mt-6 mb-6">
             <Label
               htmlFor="username"
-              className="text-white"
+              className="text-white "
             >
               Username
             </Label>
             <Input
               id="username"
-              placeholder="yourusername"
+              placeholder="Your Username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}

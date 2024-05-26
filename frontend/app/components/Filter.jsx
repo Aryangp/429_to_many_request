@@ -28,7 +28,7 @@ const Filter = () => {
       </button>
 
       {/* Backdrop */}
-      {isFilterOpen && (
+      {isFilterOpen && (  
         <div
           className="fixed top-0 left-0 w-full h-full bg-gray-800 opacity-50"
           onClick={toggleFilter}
@@ -77,7 +77,7 @@ const Filter = () => {
           </div>
 
           {/* Minimum Rating */}
-          <div className="mb-4 text-custom4">
+          <div className="block text-lg w-full font mb-2 text-custom4">
             <label className="block text-lg mb-2 text-custom4 ">
               Minimum Rating
             </label>
@@ -88,9 +88,9 @@ const Filter = () => {
               step="0.1"
               value={minRating}
               onChange={(e) => setMinRating(parseFloat(e.target.value))}
-              className="w-full"
+              className="w-full "
             />
-            <span>Min Rating: {minRating}</span>
+            <span className="text-base">Min Rating: {minRating}</span>
           </div>
 
           {/* Apply Filters button */}
