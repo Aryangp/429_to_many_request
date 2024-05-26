@@ -77,7 +77,7 @@ export const FloatingNav = ({
           className="dark:bg-custom2 bg-custom2 text-white dark:text-white"
           as="button"
         >
-          <a href="/Login">Login</a>
+          <a href="/login">Login</a>
         </HoverBorderGradient>
       </motion.div>
     </AnimatePresence>
