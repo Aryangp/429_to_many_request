@@ -5,7 +5,7 @@ import { Input } from "../ui/input"
 import { cn } from "@/utils/cn"
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation" // Make sure to use next/navigation
+import { useRouter } from "next/navigation"
 
 export default function LogIn() {
   const [username, setUsername] = useState("")

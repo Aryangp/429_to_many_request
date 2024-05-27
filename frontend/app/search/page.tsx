@@ -138,7 +138,7 @@ const Search = () => {
 
   return (
     <div className="bg-custom1 h-[100vh] pt-10">
-      <div className="ml-3 flex justify-center flex-row gap-2">
+      <div className="ml-16 flex justify-center flex-row gap-2">
         <div>
           <SearchBar
             inputValue={inputValue}

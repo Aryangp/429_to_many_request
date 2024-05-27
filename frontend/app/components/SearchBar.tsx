@@ -1,5 +1,6 @@
 // Code: SearchBar Component
-import React from "react";
+import React, { useEffect, useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 
 type SearchBarProps = {
     inputValue: string;
@@ -7,10 +8,26 @@ type SearchBarProps = {
     };
 
 function SearchBar({ inputValue, setInputValue }: SearchBarProps) {
-  const handleClick = (value: string) => {
-    setInputValue(value);
-    console.log("Button clicked: ", inputValue);
-  };
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(0)
+  const placeholders = [
+    "Search...",
+    "Find your favorite topics...",
+    "Explore...",
+  ]
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    const startAnimation = () => {
+      interval = setInterval(() => {
+        setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length)
+      }, 1500)
+    }
+    startAnimation()
+    return () => clearInterval(interval)
+  }, [placeholders.length])
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)
+    console.log("Button clicked: ", inputValue)
+  }
   return (
     <>
       <div className="m-6 flex md:order-2">
@@ -60,10 +77,10 @@ function SearchBar({ inputValue, setInputValue }: SearchBarProps) {
           <input
             type="text"
             id="search-navbar"
-            className="block w-full p-2 ps-10 text-base text-custom4 border-1 border-custom4 rounded-full bg-custom2 focus:ring-custom4 focus:border-custom4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search..."
+            className="block w-full p-2 ps-10 text-base text-custom4 border-1 border-custom4 rounded-full bg-custom2 focus:ring-custom4 focus:border-custom4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
+            placeholder={placeholders[currentPlaceholder]}
             value={inputValue}
-            onChange={(e) => handleClick(e.target.value)}
+            onChange= {handleInputChange}
           ></input>
         </div>
         {/* <button
@@ -92,7 +109,7 @@ function SearchBar({ inputValue, setInputValue }: SearchBarProps) {
         </button> */}
       </div>
     </>
-  );
+  )
 }
 
 export default SearchBar;
