@@ -29,6 +29,7 @@ export default function SignupFormDemo() {
           "Content-Type": "application/json",
         },
       })
+      router.push("/login")
       return response.data
     } catch (error) {
       if (error.response){

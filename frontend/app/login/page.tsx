@@ -5,27 +5,37 @@ import { Input } from "../ui/input"
 import { cn } from "@/utils/cn"
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react"
 import { signIn } from "next-auth/react"
+// import { useRouter } from "next/navigation"
+import axios from "../../utils/axios"
+import qs from "qs"
 import { useRouter } from "next/navigation"
 
 export default function LogIn() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  const router = useRouter()
+  const routes = useRouter()
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const result = await signIn("credentials", {
-      redirect: false,
-      username,
-      password,
+    const data = qs.stringify({
+      username: e.target.username.value,
+      password: e.target.password.value,
     })
-
-    if (result?.error) {
-      setError("Invalid username or password") // Set error message
-      console.error("Login failed:", result.error)
-    } else {
-      router.push("/search")
+    try {
+      const res = await axios.post("/auth/token", data, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+      const token = res.data
+      const access_token = token.access_token
+      if (localStorage.getItem("token")){
+         localStorage.removeItem("token")
+      }
+      localStorage.setItem("token", access_token)
+      routes.push("/search")
+    } catch (err) {
+      console.error("Error during authorization:", error)
+      return null
     }
   }
 
@@ -70,9 +80,7 @@ export default function LogIn() {
             />
           </LabelInputContainer>
           {error && ( // Display error message if error state is not empty
-            <div className="text-red-500 text-sm mb-4">
-              {error}
-            </div>
+            <div className="text-red-500 text-sm mb-4">{error}</div>
           )}
           <button
             className="bg-custom2 dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-custom4 rounded-md h-10 font-medium border-2 border-custom5 hover:border-custom4 transition-all ease-linear duration-200 mt-10"
